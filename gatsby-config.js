@@ -53,5 +53,11 @@ module.exports = {
         pathToConfigModule: 'src/utils/typography',
       },
     },
+    {
+      resolve: `gatsby-source-medium`,
+      options: {
+        username: `@leelorz6`,
+      },
+    },
   ],
 }

@@ -10,28 +10,38 @@ import { rhythm } from '../utils/typography'
 class BlogIndex extends React.Component {
   render() {
     const siteTitle = get(this, 'props.data.site.siteMetadata.title')
-    const posts = get(this, 'props.data.allMarkdownRemark.edges')
+    const posts = get(this, 'props.data.allMediumPost.edges')
+    const mediumURL = `https://medium.com/@leelorz6/`
 
     return (
       <Layout location={this.props.location}>
         <Helmet title={siteTitle} />
         <Bio />
         {posts.map(({ node }) => {
-          const title = get(node, 'frontmatter.title') || node.fields.slug
+          const title = get(node, 'title')
           return (
-            <div key={node.fields.slug}>
-              <h3
-                style={{
-                  marginBottom: rhythm(1 / 4),
-                }}
-              >
-                <Link style={{ boxShadow: 'none' }} to={node.fields.slug}>
+            <a
+              target="_blank"
+              href={`${mediumURL}${node.id}`}
+              key={node.id}
+              style={{ color: '#000' }}
+            >
+              <div>
+                <h3
+                  style={{
+                    marginBottom: rhythm(1 / 4),
+                  }}
+                >
+                  {/* <Link style={{ boxShadow: 'none' }} to={node.fields.slug}> */}
                   {title}
-                </Link>
-              </h3>
-              <small>{node.frontmatter.date}</small>
-              <p dangerouslySetInnerHTML={{ __html: node.excerpt }} />
-            </div>
+                  {/* </Link> */}
+                </h3>
+                <small>{node.createdAt}</small>
+                <p
+                  dangerouslySetInnerHTML={{ __html: node.virtuals.subtitle }}
+                />
+              </div>
+            </a>
           )
         })}
       </Layout>
@@ -48,16 +58,20 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMediumPost(sort: { fields: [createdAt], order: DESC }) {
       edges {
         node {
-          excerpt
-          fields {
-            slug
+          id
+          title
+          virtuals {
+            subtitle
+            previewImage {
+              imageId
+            }
           }
-          frontmatter {
-            date(formatString: "DD MMMM, YYYY")
-            title
+          createdAt
+          author {
+            name
           }
         }
       }
