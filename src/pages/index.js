@@ -36,7 +36,13 @@ class BlogIndex extends React.Component {
                   {title}
                   {/* </Link> */}
                 </h3>
-                <small>{node.createdAt}</small>
+                {node.virtuals.tags.map(({ name }) => {
+                  return <small>#{name + ' '}</small>
+                })}
+                <br />
+                <small>
+                  {node.latestPublishedAt} by {node.author.name}
+                </small>
                 <p
                   dangerouslySetInnerHTML={{ __html: node.virtuals.subtitle }}
                 />
@@ -58,7 +64,7 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMediumPost(sort: { fields: [createdAt], order: DESC }) {
+    allMediumPost(sort: { fields: [latestPublishedAt], order: DESC }) {
       edges {
         node {
           id
@@ -68,8 +74,12 @@ export const pageQuery = graphql`
             previewImage {
               imageId
             }
+            tags {
+              name
+            }
           }
           createdAt
+          latestPublishedAt
           author {
             name
           }
