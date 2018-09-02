@@ -59,5 +59,6 @@ module.exports = {
         username: `@leelorz6`,
       },
     },
+    `gatsby-plugin-emotion`,
   ],
 }
