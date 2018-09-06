@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'react-emotion'
 import { Link } from 'gatsby'
 import get from 'lodash/get'
 import Helmet from 'react-helmet'
@@ -8,11 +9,16 @@ import Layout from '../components/layout'
 import Footer from '../components/Footer'
 import { rhythm } from '../utils/typography'
 
+const Image = ({ link }) => styled('div')`
+  background-image: url(link);
+`
+
 class BlogIndex extends React.Component {
   render() {
     const siteTitle = get(this, 'props.data.site.siteMetadata.title')
     const posts = get(this, 'props.data.allMediumPost.edges')
     const mediumURL = `https://medium.com/@leelorz6/`
+    const imageURL = `https://cdn-images-1.medium.com/max/750/`
 
     return (
       <Layout location={this.props.location}>
@@ -20,6 +26,7 @@ class BlogIndex extends React.Component {
         <Bio />
         {posts.map(({ node }) => {
           const title = get(node, 'title')
+          const previewImage = get(node.virtuals.previewImage, 'imageId')
           return (
             <a
               target="_blank"
@@ -37,6 +44,8 @@ class BlogIndex extends React.Component {
                   {title}
                   {/* </Link> */}
                 </h3>
+                <img src={imageURL + previewImage} />
+                <div />
                 {node.virtuals.tags.map(({ name }) => {
                   return <small>#{name + ' '}</small>
                 })}
